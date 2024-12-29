@@ -4,3 +4,4 @@ __pycache__/
 .vscode/
 build/
 static/
+blocks_db.json
