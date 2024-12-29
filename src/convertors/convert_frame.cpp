@@ -58,6 +58,8 @@ cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img) {
                 }
 
             }
+
+            
             // Your logic to find the closest item
             // Update the output with the closest_item's image data
         }
