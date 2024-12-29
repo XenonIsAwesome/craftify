@@ -18,38 +18,23 @@ class PixelRGB:
 class BakedBlock:
     name: str
     texture_image: str
-    game_id: str
-    game_id_13: str
-    block_id: int
-    data_id: int
-    luminance: bool
-    transparency: bool
-    falling: bool
-    redstone: bool
-    survival: bool
-    version: int
     index: int
     red: int
     green: int
     blue: int
-    h: int
-    s: int
-    l: int
-    axis: str = ""
     deviation: int = 100e6
 
 
 class BlocksDB:
     instance: 'BlocksDB' = None
+
     def __init__(self):
         self.blocks = []
-        with open("minecraft-artifier-js/static/baked_blocks.json", "r") as file:
+        
+        with open("blocks_db.json", "r") as file:
             entries = json.load(file)
-            for entry_idx in range(len(entries)):
-                entries[entry_idx]["index"] = entries[entry_idx]["id"]
-                del entries[entry_idx]["id"]
-
-                self.blocks.append(BakedBlock(**entries[entry_idx]))
+            for entry in entries:
+                self.blocks.append(BakedBlock(**entry))
     
     @staticmethod
     def getInstance() -> 'BlocksDB':
