@@ -29,7 +29,7 @@ cv::Mat downscale_image(const std::string& image_path, size_t scale_factor) {
 }
 
 
-cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img) {
+cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img, const std::string &mode) {
     int pxl_red, pxl_green, pxl_blue, pxl_alpha, current_deviation, min_deviation;
     size_t closest_index = 100e6;
 
@@ -55,6 +55,29 @@ cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img) {
             pxl_red = pixel_rgb[2];
             
             pxl_alpha = pixel_rgb[3];
+            if (mode == "lamp") {
+                int avg_color = std::floor((pxl_red + pxl_green + pxl_blue) / 3);
+                std::string texture_name = avg_color > 127 ? "redstone_lamp_on.png" : "redstone_lamp_off.png";
+                
+                std::stringstream texture_path;
+                texture_path << "minecraft-artifier-js/static/textures/" << texture_name;
+                cv::Mat block_texture = cv::imread(texture_path.str(), cv::IMREAD_UNCHANGED);
+
+                [[unlikely]] if (block_texture.empty()) {
+                    std::cerr << "Could not open or find the texture image!" << std::endl;
+                    std::cerr << "Path: " << texture_path.str() << std::endl;
+                    continue;
+                }
+
+                // Paste the block texture onto the output image
+                if (block_texture.channels() < output.channels()) {
+                    cv::cvtColor(block_texture, block_texture, cv::COLOR_BGR2BGRA);
+                }
+
+                block_texture.copyTo(output(cv::Rect(x * 16, y * 16, 16, 16)));
+                continue;
+            }
+
             if (pxl_alpha <= 70) continue;
 
 
@@ -74,7 +97,7 @@ cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img) {
             texture_path << "minecraft-artifier-js/static/textures/" << closest_baked_block.texture_name;
             cv::Mat block_texture = cv::imread(texture_path.str(), cv::IMREAD_UNCHANGED);
 
-            if (block_texture.empty()) {
+            [[unlikely]] if (block_texture.empty()) {
                 std::cerr << "Could not open or find the texture image!" << std::endl;
                 std::cerr << "Path: " << texture_path.str() << std::endl;
                 continue;
