@@ -40,7 +40,7 @@ def convert_image_to_minecraft_blocks(img: Image) -> Image:
             
             # Get the block and its texture
             block = "redstone_lamp_on.png" if lamp_on else "redstone_lamp_off.png"
-            block_texture = Image.open("static/textures/" + block)
+            block_texture = Image.open("minecraft-artifier-js/static/textures/" + block)
             
             # Paste the block texture onto the output image
             output.paste(block_texture, (x * 16, y * 16))

@@ -43,7 +43,7 @@ class BlocksDB:
     instance: 'BlocksDB' = None
     def __init__(self):
         self.blocks = []
-        with open("static/baked_blocks.json", "r") as file:
+        with open("minecraft-artifier-js/static/baked_blocks.json", "r") as file:
             entries = json.load(file)
             for entry_idx in range(len(entries)):
                 entries[entry_idx]["index"] = entries[entry_idx]["id"]
@@ -115,7 +115,7 @@ def convert_image_to_minecraft_blocks(img: Image) -> Image:
             
             # Get the closest block and its texture
             block = bdb[closest_key]
-            block_texture = Image.open("static/textures/" + block.texture_image)
+            block_texture = Image.open("minecraft-artifier-js/static/textures/" + block.texture_image)
             
             # Paste the block texture onto the output image
             output.paste(block_texture, (x * 16, y * 16))
