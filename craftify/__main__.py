@@ -77,7 +77,8 @@ def process_frames(frames_folder: str, output_folder: str, scale_factor: int = 1
         frame_path = os.path.join(frames_folder, frame_file)
         converted_img_path = os.path.join(output_folder, frame_file)
 
-        subprocess.run(['python3', "craftify/convertors/convert_frame.py", frame_path, converted_img_path, str(scale_factor)])
+        subprocess.run(['build/craftify_convert_frame', frame_path, converted_img_path, str(scale_factor)], 
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_threads) as executor:
         list(tqdm(executor.map(process_frame, frame_files), total=len(frame_files), desc="Converting frames to minecraft blocks"))

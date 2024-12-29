@@ -6,10 +6,9 @@
 
 class BlocksDB {
 public:
-    static BlocksDB& getInstance();
+    static BlocksDB *getInstance();
 
-    BakedBlock &operator[] (int index);
-
+    BakedBlock &at(int index);
     size_t size() {return blocks.size();};
 
 private:
@@ -18,7 +17,7 @@ private:
     void loadBlocksFromFile(const std::string& file_path);
 
     std::vector<BakedBlock> blocks;
-    static BlocksDB &instance = nullptr;
+    static BlocksDB *instance;
     
 };
 

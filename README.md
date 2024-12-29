@@ -10,3 +10,13 @@ git submodule update --init --recursive
 ## Before running
 1. Make sure to install the required requirements (`pip install -r requirements`)
 2. Run the `bake_blocks.py` script (`python bake_blocks.py`)
+
+
+## Building the cpp converter
+1. Install `OpenCV` and `nohlmann::json`
+2. Run the following:
+```bash
+mkdir build && cd build
+cmake ..
+make
+```
