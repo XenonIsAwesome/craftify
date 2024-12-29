@@ -29,9 +29,9 @@ for i, img_path in enumerate(images):
 
     image_dict = {
         "name": img_path.rsplit('.', maxsplit=1)[0],
-        "r": avg_r,
-        "g": avg_g,
-        "b": avg_b,
+        "red": avg_r,
+        "green": avg_g,
+        "blue": avg_b,
         "texture_image": img_path,
         "index": i
     }
