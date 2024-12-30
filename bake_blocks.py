@@ -39,4 +39,4 @@ for i, img_path in enumerate(images):
     blocks_db.append(image_dict)
 
 with open('blocks_db.json', 'w') as f:
-    json.dump(blocks_db, f)
+    json.dump(blocks_db, f, indent=4)
