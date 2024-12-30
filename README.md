@@ -8,20 +8,34 @@ git submodule update --init --recursive
 ```
 
 ## Before running
-1. Make sure to install the required requirements (`pip install -r requirements`)
-2. Run the `bake_blocks.py` script (`python bake_blocks.py`)
-
-
-## Building the cpp converter
-1. Install `OpenCV`
-2. Run the following:
+1. Make sure to install the required python requirements (`pip install -r requirements`)
+2. Download textures by running `python download_textures.py <version-tag>`
+    <br>
+    Examples:
+    <br>
+    a. `python download_textures.py 1.21.4`
+    <br>
+    b. `python download_textures.py 24w44a`
+    <br>
+    c. `python download_textures.py latest release`
+    <br>
+    d. `python download_textures.py latest snapshot`
+    <br>
+3. Run the `bake_blocks.py` script (`python bake_blocks.py`)
+4. Install the build dependencies (`OpenCV`, `cmake`, `gcc`)
+5. Run the following to build the C++ converter:
 ```bash
-mkdir build && cd build
+# First time only
+mkdir -p build
+cd build
 cmake ..
-make
+cd ..
+
+# Every change
+./compile-cpp.sh
 ```
 
-## Example
+## Usage example
 
 ### mode=normal
 ![bad_apple_example.gif](bad_apple_example.gif)
