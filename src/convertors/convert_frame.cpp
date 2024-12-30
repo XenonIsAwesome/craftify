@@ -57,7 +57,7 @@ cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img, const std::string 
             pxl_alpha = pixel_rgb[3];
             if (mode == "lamp") {
                 int avg_color = std::floor((pxl_red + pxl_green + pxl_blue) / 3);
-                std::string texture_name = avg_color > 127 ? "redstone_lamp_on.png" : "redstone_lamp_off.png";
+                std::string texture_name = avg_color > 127 ? "redstone_lamp_on.png" : "redstone_lamp.png";
                 
                 std::stringstream texture_path;
                 texture_path << "assets/minecraft/textures/block/" << texture_name;

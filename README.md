@@ -8,7 +8,7 @@ git submodule update --init --recursive
 ```
 
 ## Before running
-1. Make sure to install the required python requirements (`pip install -r requirements`)
+1. Make sure to install the required python requirements (`pip install -r requirements.txt`)
 2. Download textures by running `python download_textures.py <version-tag>`
     <br>
     Examples:
@@ -41,12 +41,12 @@ cd ..
 ![bad_apple_example.gif](bad_apple_example.gif)
 Command used:
 ```bash
-python3 -m craftify -i bad_apple.mp4 --scale-factor 2 bad_apple_example.mp4
+python -m craftify -i bad_apple.mp4 --scale-factor 2 bad_apple_example.mp4
 ```
 
 ### mode=lamp
 ![bad_apple_lamp_example.gif](bad_apple_lamp_example.gif)
 Command used:
 ```bash
-python3 -m craftify -i bad_apple.mp4 --mode lamp --scale-factor 2 bad_apple_lamp_example.mp4
+python -m craftify -i bad_apple.mp4 --mode lamp --scale-factor 2 bad_apple_lamp_example.mp4
 ```
