@@ -30,7 +30,7 @@ BakedBlock::BakedBlock(const BakedBlock& block) {
 
 cv::Mat BakedBlock::loadTexture() {
     std::stringstream texture_path;
-    texture_path << "minecraft_artifier-js/textures/" << texture_name;
+    texture_path << "assets/minecraft/textures/block/" << texture_name;
     return cv::imread(texture_path.str(), cv::IMREAD_UNCHANGED);
 }
 

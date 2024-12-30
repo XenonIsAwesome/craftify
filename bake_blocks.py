@@ -3,13 +3,13 @@ from PIL import Image
 import json
 
 
-BASE_PATH = 'minecraft-artifier-js/static/textures/'
+BASE_PATH = 'assets/minecraft/textures/block/'
 images = sorted(os.listdir(BASE_PATH))
 blocks_db = []
 
 for i, img_path in enumerate(images):
     img = Image.open(BASE_PATH + img_path)
-    img.convert("RGBA")
+    img = img.convert("RGBA")
 
     sum_r = 0
     sum_g = 0

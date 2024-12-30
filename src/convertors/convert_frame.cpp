@@ -60,7 +60,7 @@ cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img, const std::string 
                 std::string texture_name = avg_color > 127 ? "redstone_lamp_on.png" : "redstone_lamp_off.png";
                 
                 std::stringstream texture_path;
-                texture_path << "minecraft-artifier-js/static/textures/" << texture_name;
+                texture_path << "assets/minecraft/textures/block/" << texture_name;
                 cv::Mat block_texture = cv::imread(texture_path.str(), cv::IMREAD_UNCHANGED);
 
                 [[unlikely]] if (block_texture.empty()) {
@@ -75,6 +75,11 @@ cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img, const std::string 
                 }
 
                 block_texture.copyTo(output(cv::Rect(x * 16, y * 16, 16, 16)));
+#if STEP_DEBUG
+                std::stringstream step3_path;
+                step3_path << "steps/step3/step3_y" << y << "_x" << x << ".png";
+                cv::imwrite(step3_path.str(), output);
+#endif // STEP_DEBUG
                 continue;
             }
 
@@ -94,7 +99,7 @@ cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img, const std::string 
             // Get the closest block and its texture
             BakedBlock &closest_baked_block = bdb->at(closest_index);
             std::stringstream texture_path;
-            texture_path << "minecraft-artifier-js/static/textures/" << closest_baked_block.texture_name;
+            texture_path << "assets/minecraft/textures/block/" << closest_baked_block.texture_name;
             cv::Mat block_texture = cv::imread(texture_path.str(), cv::IMREAD_UNCHANGED);
 
             [[unlikely]] if (block_texture.empty()) {
