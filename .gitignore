@@ -3,5 +3,5 @@ __pycache__/
 .venv/
 .vscode/
 build/
-static/
 blocks_db.json
+assets/

@@ -148,7 +148,7 @@ if __name__ == "__main__":
     parser.add_argument('--scale-factor', type=int, default=1, help='Scale factor for frame processing.')
     parser.add_argument('--max-threads', type=int, default=100, help='Maximum number of threads for frame processing.')
     parser.add_argument('-m', '--mode', default="normal", help='normal/lamp.')
-    parser.add_argument('--play-output', action='store_false', help='Play the output video after processing.')
+    parser.add_argument('--play-output', action='store_true', help='Play the output video after processing.')
     parser.add_argument('output', help='Path to the output video file.')
 
     args = parser.parse_args()
@@ -165,9 +165,20 @@ if __name__ == "__main__":
     output_frames_folder = '/tmp/output_frames'
     combined_frames_folder = '/tmp/combined_frames'
 
-    cleanup_temp_folder(frames_folder)
-    cleanup_temp_folder(output_frames_folder)
-    cleanup_temp_folder(combined_frames_folder)
+    try:
+        cleanup_temp_folder(frames_folder)
+    except:
+        pass
+
+    try:
+        cleanup_temp_folder(output_frames_folder)
+    except:
+        pass
+    
+    try:
+        cleanup_temp_folder(combined_frames_folder)
+    except:
+        pass
 
     if scale_factor > 2:
         print("This might take a while, grab a coffee.")
