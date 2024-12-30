@@ -1,3 +1,6 @@
 [submodule "minecraft-artifier-js"]
 	path = minecraft-artifier-js
 	url = https://github.com/Explodey54/minecraft-artifier-js.git
+[submodule "src/nlohmann"]
+	path = src/nlohmann
+	url = https://github.com/nlohmann/json.git

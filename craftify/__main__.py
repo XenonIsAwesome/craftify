@@ -68,7 +68,7 @@ def stitch_frames_to_video(frames_folder: str, output_video_path: str, original_
     os.remove(audio_path)
 
 
-def process_frames(frames_folder: str, output_folder: str, scale_factor: int = 1, max_threads: int = 100):
+def process_frames(frames_folder: str, output_folder: str, mode: str = "normal", scale_factor: int = 1, max_threads: int = 100):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
     frame_files = sorted([f for f in os.listdir(frames_folder) if f.endswith('.png')])
@@ -77,7 +77,8 @@ def process_frames(frames_folder: str, output_folder: str, scale_factor: int = 1
         frame_path = os.path.join(frames_folder, frame_file)
         converted_img_path = os.path.join(output_folder, frame_file)
 
-        subprocess.run(['python3', "craftify/convertors/convert_frame.py", frame_path, converted_img_path, str(scale_factor)])
+        subprocess.run(['build/craftify_convert_frame', frame_path, converted_img_path, mode, str(scale_factor)], 
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_threads) as executor:
         list(tqdm(executor.map(process_frame, frame_files), total=len(frame_files), desc="Converting frames to minecraft blocks"))
@@ -146,6 +147,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--combined', required=False, help='Path to the combined output video file.')
     parser.add_argument('--scale-factor', type=int, default=1, help='Scale factor for frame processing.')
     parser.add_argument('--max-threads', type=int, default=100, help='Maximum number of threads for frame processing.')
+    parser.add_argument('-m', '--mode', default="normal", help='normal/lamp.')
     parser.add_argument('--play-output', action='store_false', help='Play the output video after processing.')
     parser.add_argument('output', help='Path to the output video file.')
 
@@ -156,6 +158,7 @@ if __name__ == "__main__":
     scale_factor = args.scale_factor
     max_threads = args.max_threads
     output_video_path = args.output
+    mode = args.mode
     play_output = args.play_output
 
     frames_folder = '/tmp/frames'
@@ -170,7 +173,7 @@ if __name__ == "__main__":
         print("This might take a while, grab a coffee.")
 
     extract_frames(video_path, frames_folder)
-    process_frames(frames_folder, output_frames_folder, scale_factor=scale_factor, max_threads=max_threads)
+    process_frames(frames_folder, output_frames_folder, mode=mode, scale_factor=scale_factor, max_threads=max_threads)
     stitch_frames_to_video(output_frames_folder, output_video_path, video_path)
     
     print(f"Output video saved to {output_video_path}")
