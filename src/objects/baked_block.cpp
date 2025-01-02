@@ -28,9 +28,21 @@ BakedBlock::BakedBlock(const BakedBlock& block) {
 }
 
 
-cv::Mat BakedBlock::loadTexture() {
+cv::Mat BakedBlock::loadTexture() const {
     std::stringstream texture_path;
     texture_path << "assets/minecraft/textures/block/" << texture_name;
-    return cv::imread(texture_path.str(), cv::IMREAD_UNCHANGED);
+    auto block_texture =  cv::imread(texture_path.str(), cv::IMREAD_UNCHANGED);
+
+    [[unlikely]] if (block_texture.empty()) {
+        std::stringstream err;
+
+        err << "Could not open or find the texture image!" << std::endl;
+        err << "Path: " << texture_path.str();
+
+        std::cerr << err.str() << std::endl;
+        throw std::runtime_error(err.str());
+    }
+
+    return block_texture;
 }
 

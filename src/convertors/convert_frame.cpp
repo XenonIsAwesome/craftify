@@ -4,7 +4,6 @@
 #include <memory>
 #include "convert_frame.h"
 #include "../objects/blocks_db.h"
-#include "../objects/baked_block.h"
 
 
 cv::Mat downscale_image(const std::string& image_path, size_t scale_factor) {
@@ -15,11 +14,11 @@ cv::Mat downscale_image(const std::string& image_path, size_t scale_factor) {
     [[unlikely]] if (img.empty()) {
         std::cerr << "Could not open or find the image!" << std::endl;
         std::cerr << "Path: " << image_path << std::endl;
-        return cv::Mat();
+        return {};
     }
 
-    size_t scaled_height = std::floor(img.rows / scale_factor);
-    size_t scaled_width = std::floor(img.cols / scale_factor);
+    int scaled_height = std::floor(img.rows / scale_factor);
+    int scaled_width = std::floor(img.cols / scale_factor);
 
     cv::Size scaled_size(scaled_width, scaled_height);
     cv::Mat scaled_img;
@@ -31,7 +30,7 @@ cv::Mat downscale_image(const std::string& image_path, size_t scale_factor) {
 
 cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img, const std::string &mode) {
     int pxl_red, pxl_green, pxl_blue, pxl_alpha, current_deviation, min_deviation;
-    size_t closest_index = 100e6;
+    size_t closest_index;
 
     cv::Mat img_rgba;
 
@@ -57,19 +56,13 @@ cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img, const std::string 
             pxl_alpha = pixel_rgb[3];
             if (mode == "lamp") {
                 int avg_color = std::floor((pxl_red + pxl_green + pxl_blue) / 3);
-                std::string texture_name = avg_color > 127 ? "redstone_lamp_on.png" : "redstone_lamp.png";
-                
-                std::stringstream texture_path;
-                texture_path << "assets/minecraft/textures/block/" << texture_name;
-                cv::Mat block_texture = cv::imread(texture_path.str(), cv::IMREAD_UNCHANGED);
 
-                [[unlikely]] if (block_texture.empty()) {
-                    std::cerr << "Could not open or find the texture image!" << std::endl;
-                    std::cerr << "Path: " << texture_path.str() << std::endl;
-                    continue;
-                }
+                /// Creating a fake block just to load the texture
+                BakedBlock closest_baked_block = BakedBlock(bdb->at(0));
+                closest_baked_block.texture_name = avg_color > 127 ? "redstone_lamp_on.png" : "redstone_lamp.png";
+                cv::Mat block_texture = closest_baked_block.loadTexture();
 
-                // Paste the block texture onto the output image
+                /// Paste the block texture onto the output image
                 if (block_texture.channels() < output.channels()) {
                     cv::cvtColor(block_texture, block_texture, cv::COLOR_BGR2BGRA);
                 }
@@ -86,29 +79,21 @@ cv::Mat convert_image_to_minecraft_blocks(const cv::Mat& img, const std::string 
             if (pxl_alpha <= 70) continue;
 
 
-            for (int i = 0; i < bdb->size(); ++i) {
+            for (size_t i = 0; i < bdb->size(); ++i) {
                 BakedBlock& block = bdb->at(i);
 
                 current_deviation = std::abs(pxl_red - block.red) + std::abs(pxl_green - block.green) + std::abs(pxl_blue - block.blue);
-                if (closest_index == 100e6 || current_deviation < min_deviation) {
+                if (closest_index == static_cast<size_t>(100e6) || current_deviation < min_deviation) {
                     closest_index = i;
                     min_deviation = current_deviation;
                 }
             }
 
-            // Get the closest block and its texture
+            /// Get the closest block and its texture
             BakedBlock &closest_baked_block = bdb->at(closest_index);
-            std::stringstream texture_path;
-            texture_path << "assets/minecraft/textures/block/" << closest_baked_block.texture_name;
-            cv::Mat block_texture = cv::imread(texture_path.str(), cv::IMREAD_UNCHANGED);
+            cv::Mat block_texture = closest_baked_block.loadTexture();
 
-            [[unlikely]] if (block_texture.empty()) {
-                std::cerr << "Could not open or find the texture image!" << std::endl;
-                std::cerr << "Path: " << texture_path.str() << std::endl;
-                continue;
-            }
-
-            // Paste the block texture onto the output image
+            /// Paste the block texture onto the output image
             if (block_texture.channels() < output.channels()) {
                 cv::cvtColor(block_texture, block_texture, cv::COLOR_BGR2BGRA);
             }
