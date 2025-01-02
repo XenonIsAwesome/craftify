@@ -1,5 +1,4 @@
 #include "baked_block.h"
-#include "../nlohmann/single_include/nlohmann/json.hpp"
 
 
 BakedBlock::BakedBlock(json block_json) {
