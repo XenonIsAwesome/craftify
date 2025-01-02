@@ -1,6 +1,5 @@
 #include "blocks_db.h"
 #include <fstream>
-#include "../nlohmann/single_include/nlohmann/json.hpp"
 
 BlocksDB *BlocksDB::instance = nullptr;
 
