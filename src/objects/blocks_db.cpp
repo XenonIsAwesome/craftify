@@ -11,7 +11,7 @@ BlocksDB *BlocksDB::getInstance() {
 }
 
 
-BakedBlock &BlocksDB::at(int index) {
+BakedBlock &BlocksDB::at(size_t index) {
     return blocks[index];
 }
 
